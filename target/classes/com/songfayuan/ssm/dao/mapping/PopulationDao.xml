@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songfayuan.ssm.dao.PopulationDao">
+
+	<!-- 查询从offset+1开始，取pagesize条数据）     查询所有的一级人群标签列表   -->
+	<select id="getList" resultType="com.songfayuan.ssm.entity.Population" >
+		select
+			*
+		from
+			population u
+		where u.pid = 0
+		order by
+			u.id desc
+		<if test="offset != null and pagesize != null">limit #{offset}, #{pagesize}</if>
+	</select>
+	
+	<!-- 查询数据有多少条    查询所有的一级人群标签列表   -->
+	<select id="findRows" resultType="Integer" >
+		select
+			count(u.id)
+		from
+			population u
+		 where u.pid = 0
+	</select>
+
+	<!-- （查询从offset+1开始，取pagesize条数据）-->
+	<select id="getSecondList" resultType="com.songfayuan.ssm.entity.Population" >
+		select
+			*
+		from
+			population u
+		where u.pid = #{id}
+		order by
+			u.id desc
+		<if test="offset != null and pagesize != null">limit #{offset}, #{pagesize}</if>
+	</select>
+	
+	<!-- 查询数据有多少条  -->
+	<select id="findSecondRows" resultType="Integer" >
+		select
+			count(u.id)
+		from
+			population u
+		 where  u.pid = #{id}
+	</select>
+	
+	<!-- 根据id删除二级人群标签数据 -->
+	<delete id="deleteByPid">
+		delete
+		from
+			population
+		where
+			id = #{id} and pid = #{pid}
+	</delete>
+	
+	<!-- 根据id删除一级分类 -->
+	<delete id="delete">
+		delete
+		from
+			population
+		where
+			id = #{id}
+	</delete>
+	
+	<!-- 根据id和pid查询一条数据 -->
+	<select id="selectByPid" resultType="com.songfayuan.ssm.entity.Population">
+		select
+			*
+		from
+			population u
+		where u.id = #{id} and u.pid = #{pid}
+	</select>
+	
+	<!-- 保存更新 -->
+	<update id="update" parameterType="com.songfayuan.ssm.entity.Population">
+		update population
+		<set>
+			<if test="label != null">label = #{label},</if>
+			<if test="pid != null">pid = #{pid},</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<insert id="saveSecondType" useGeneratedKeys="true" keyProperty="id" parameterType="com.songfayuan.ssm.entity.Population">
+		insert into population(
+			label,pid
+		)
+		values
+			(#{label},#{pid})
+	</insert>
+
+</mapper>

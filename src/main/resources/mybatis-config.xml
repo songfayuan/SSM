@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- plugins在配置文件中的位置必须符合要求，否则会报错，顺序如下: properties, settings, typeAliases, 
+		typeHandlers, objectFactory,objectWrapperFactory, plugins, environments, 
+		databaseIdProvider, mappers -->
+	<settings>
+		<!-- 设置驼峰转换，例如数据库字段user_name可以映射到javaBean的属性userName上 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	<typeAliases>
+		<package name="com.songfayuan.ssm.entity" />
+	</typeAliases>
+</configuration>

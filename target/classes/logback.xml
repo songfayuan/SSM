@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="120 seconds" debug="false">
+<!-- 	<property name="log.base" value="${logger.location}/${project.name}/${project.name}" /> -->
+	<property name="log.base" value="/ssm_log/ssm.logs/ssm/ssm" />
+	<appender name="FILEOUT"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender -->
+		<File>${log.base}.log</File>
+		<encoder>
+			<pattern>%d [%t] %5p %c:%L - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>256MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<FileNamePattern>${log.base}-%d{yyyy-MM-dd}-%i.log.gz
+			</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+	</appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d [%t] %5p %c:%L - %m%n</pattern>
+		</encoder>
+	</appender>
+	<!-- mybatis使用增强过的dao中的logger作为mybatis的logger，因此设置dao包的级别为debug，可以看到mybatis中的sql日志 -->
+	<logger name="com.songfayuan.ssm.dao" level="debug" />
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILEOUT" />
+	</root>
+
+</configuration>
+
+<!-- 考虑到使用maven部署本项目，则日志路径由maven管理配置比较合适。因此请在maven中配置logger.location指定logs目录 -->

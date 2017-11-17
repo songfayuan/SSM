@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songfayuan.ssm.dao.ResourceDao">
+
+	<!-- 根据ID查询一条数据-->
+	<select id="findByParentResourceId" resultType="com.songfayuan.ssm.entity.Resource" >
+		select
+			*
+		from
+			resource u
+		where
+			u.parentresourceid = #{parentresourceid}
+	</select>
+	
+</mapper>

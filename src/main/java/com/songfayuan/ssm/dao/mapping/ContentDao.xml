@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songfayuan.ssm.dao.ContentDao">
+
+	<!-- 查询从offset+1开始，取pagesize条数据 -->
+	<select id="getList" resultType="com.songfayuan.ssm.entity.Content" >
+		select
+			*
+		from
+			content u
+		<where>
+			<if test="model.title != null">and u.title like concat('%', #{model.title}, '%')</if>
+			<if test="model.starttime1 != null">
+				<if test="model.starttime1 != 0">and u.starttime &gt;= #{model.starttime1}</if>
+			</if>
+			<if test="model.endtime1 != null">
+				<if test="model.endtime1 != 0">and u.endtime &lt;= #{model.endtime1}</if>
+			</if>	
+		</where>
+		order by
+			u.id desc
+		<if test="offset != null and pagesize != null">limit #{offset}, #{pagesize}</if>
+	</select>
+
+	<!-- 查询数据有多少条 -->
+	<select id="findRows" resultType="Integer"  >
+		select
+			count(u.id)
+		from
+			content u
+		<where>
+			<if test="model.title != null">and u.title like concat('%', #{model.title}, '%')</if>
+			<if test="model.starttime1 != null">
+				<if test="model.starttime1 != 0">and u.starttime &gt;= #{model.starttime1}</if>
+			</if>
+			<if test="model.endtime1 != null">
+				<if test="model.endtime1 != 0">and u.endtime &lt;= #{model.endtime1}</if>
+			</if>	
+		</where>
+	</select>
+
+</mapper>

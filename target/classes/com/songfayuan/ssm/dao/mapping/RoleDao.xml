@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songfayuan.ssm.dao.RoleDao">
+
+	<!-- 获取角色 -->
+	<select id="getRoleList" resultType="com.songfayuan.ssm.entity.Role">
+		select * from role
+	</select>
+
+	<!-- 角色列表 -->
+	<select id="getList" resultType="com.songfayuan.ssm.entity.Role">
+		select * from role
+	</select>
+	
+	<!-- 根据id删除 -->
+	<delete id="delete">
+		delete
+		from
+			role
+		where
+			roleid = #{roleid}
+	</delete>
+	
+	<!-- 根据ID查询一条数据-->
+	<select id="get" resultType="com.songfayuan.ssm.entity.Role" >
+		select
+			*
+		from
+			role u
+		where
+			u.roleid = #{roleid}
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="com.songfayuan.ssm.entity.Role">
+		insert into role(
+			name
+		)
+		values
+			(#{name})
+	</insert>
+	
+	<!-- 根据角色id查询角色名称 -->
+	<select id="getRoleById" resultType="com.songfayuan.ssm.entity.Role">
+		select 
+			* 
+		from 
+			role
+		where
+			roleid = #{roleid}
+	</select>
+	
+</mapper>

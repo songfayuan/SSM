@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/layouts/">
+	<excludes>
+	    <pattern>/js/**</pattern>
+		<pattern>/css/**</pattern>
+		<pattern>/images/**</pattern>
+		<pattern>/upload/**</pattern>
+		<pattern>/ueditor/**</pattern>
+	</excludes>
+	
+	<decorator name="default" page="default.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+</decorators>

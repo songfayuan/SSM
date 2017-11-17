@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songfayuan.ssm.dao.UserDao">
+
+	<!-- 根据用户名，用户密码，用户类型查询用户 -->
+	<select id="findByUsernameAndPassword" resultType="com.songfayuan.ssm.entity.User" >
+	   select
+			*
+		from
+			`user`
+		where
+			username = #{username}
+		and password = #{password}
+		and usertype = #{usertype}
+	</select>
+
+	<!-- 注册用户列表 -->
+	<select id="getRegistUserslist" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			`user` 
+		where
+			usertype = 201
+	</select>
+	
+	<!-- 当天新增用户 -->
+	<select id="userDayaddList" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			`user` u
+		where
+			date(
+				from_unixtime(u.registtime / 1000)
+			) = curdate()
+		and u.usertype = 201
+	</select>
+	
+	<!-- 本周新增用户 -->
+	<select id="userWeekaddList" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			yearweek(
+				date_format(
+					from_unixtime(u.registtime / 1000),
+					'%y-%m-%d'
+				)
+			) = yearweek(now())
+		and u.usertype = 201
+	</select>
+	
+	<!-- 当月新增用户 -->
+	<select id="userMonthaddList" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			date_format(
+				from_unixtime(u.registtime / 1000),
+				'%y-%m'
+			) = date_format(now(), '%y-%m')
+		and u.usertype = 201	
+	</select>
+	
+	<!-- 本年度新增用户 -->
+	<select id="userYearaddList" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			year (
+				from_unixtime(u.registtime / 1000)
+			) = year (now())
+		and u.usertype = 201
+	</select>
+	
+	<!-- 查询所有的用户列表 （查询从offset+1开始，取pagesize条数据）-->
+	<select id="getUserList" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		<where>
+			u.usertype = 201
+			<if test="model.id != null">and u.id = #{model.id}</if>
+			<if test="model.name != null">and u.name = #{model.name}</if>
+			<if test="model.username != null">and u.username like concat('%', #{model.username}, '%')</if>
+			<if test="model.phone != null"> and u.phone = #{model.phone}</if>
+			<if test="model.wechat != null">and u.wechat = #{model.wechat}</if>			
+		</where>
+		order by
+			u.registtime desc
+		<if test="offset != null and pagesize != null">limit #{offset}, #{pagesize}</if>
+	</select>
+	
+	<!-- 查询数据有多少条-->
+	<select id="findRows" resultType="Integer" >
+		select
+			count(u.id)
+		from
+			user u
+		<where>
+			u.usertype = 201
+			<if test="model.id != null">and u.id = #{model.id}</if>
+			<if test="model.name != null">and u.name = #{model.name}</if>
+			<if test="model.username != null">and u.username like concat('%', #{model.username}, '%')</if>
+			<if test="model.phone != null"> and u.phone = #{model.phone}</if>
+			<if test="model.wechat != null">and u.wechat = #{model.wechat}</if>			
+		</where>
+	</select>
+	
+	<!-- 获取所以的用户数据列表 -->
+	<select id="getExportExcelUserList" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			u.usertype = 201
+		order by
+			u.registtime desc
+	</select>
+	
+	<!-- 根据ID获取用户详情 -->
+	<select id="findDetailById" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			u.id = #{id}
+	</select>
+	
+	<!-- 根据id删除接用户列表信息 -->
+	<delete id="delete">
+		delete
+		from
+			user
+		where
+			id = #{id}
+	</delete>
+	
+	<!-- 查询操作人名称 -->
+	<select id="findUserNameByUserId" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			u.id = #{id}
+	</select>
+	
+	<!-- 查询管理员列表（查询从offset+1开始，取pagesize条数据）-->
+	<select id="getAdminList" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		<where>
+			<if test="model.usertype == null">
+				u.usertype = 203 or u.usertype = 202
+			</if>
+			<if test="model.usertype != null">
+				u.usertype = 203 
+			</if>
+			<if test="model.id != null">and u.id = #{model.id}</if>
+			<if test="model.name != null">and u.name = #{model.name}</if>
+			<if test="model.username != null">and u.username like concat('%', #{model.username}, '%')</if>
+			<if test="model.phone != null"> and u.phone = #{model.phone}</if>
+			<if test="model.wechat != null">and u.wechat = #{model.wechat}</if>			
+		</where>
+		order by
+			u.registtime desc
+		<if test="offset != null and pagesize != null">limit #{offset}, #{pagesize}</if>
+	</select>
+	
+	<!-- 查询管理员列表条数-->
+	<select id="findAdminListRows" resultType="Integer" >
+		select
+			count(u.id)
+		from
+			user u
+		<where>
+			<!-- u.usertype = 203 or u.usertype = 202 -->
+			<if test="model.usertype == null">
+				u.usertype = 203 or u.usertype = 202
+			</if>
+			<if test="model.usertype != null">
+				u.usertype = 203 
+			</if>
+			<if test="model.id != null">and u.id = #{model.id}</if>
+			<if test="model.name != null">and u.name = #{model.name}</if>
+			<if test="model.username != null">and u.username like concat('%', #{model.username}, '%')</if>
+			<if test="model.phone != null"> and u.phone = #{model.phone}</if>
+			<if test="model.wechat != null">and u.wechat = #{model.wechat}</if>			
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.songfayuan.ssm.entity.User">
+		insert into user(
+			username,password,usertype,name,sex,phone,wechat,birthday,balance,todaymoney,totalmoney,registtime
+		)
+		values
+			(#{username},#{password},#{usertype},#{name},#{sex},#{phone},#{wechat},#{birthday},#{balance},#{todaymoney},#{totalmoney},#{registtime})
+	</insert>
+	
+	<!-- 根据username查询数据库是否存在数据 -->
+	<select id="findUserByUsername" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			u.username = #{username}
+	</select>
+	
+	<!-- 根据ID获取用户 -->
+	<select id="findById" resultType="com.songfayuan.ssm.entity.User" >
+		select
+			*
+		from
+			user u
+		where
+			u.id = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.songfayuan.ssm.entity.User">
+		update user
+		<set>
+			<if test="age != null">age = #{age},</if>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="bodyheight !=null">bodyheight = #{bodyheight},</if>
+			<if test="bodyweight !=null">bodyweight = #{bodyweight},</if>
+			<if test="img !=null">img = #{img},</if>
+			<if test="name !=null">name = #{name},</if>
+			<if test="phone !=null">phone = #{phone},</if>
+			<if test="password != null">password = #{password},</if>
+			<if test="wechat != null">wechat = #{wechat},</if>
+			<if test="registtime != null">registtime = #{registtime},</if>
+			<if test="sex != null">sex = #{sex},</if>
+			<if test="token != null">token = #{token},</if>
+			<if test="username != null">username = #{username},</if>
+			<if test="usertype != null">usertype = #{usertype},</if>
+			<if test="balance != null">balance = #{balance},</if>
+			<if test="totalmoney != null">totalmoney = #{totalmoney},</if>
+			<if test="todaymoney != null">todaymoney = #{todaymoney},</if>
+		</set>
+		where id = #{id}
+	</update>
+  
+</mapper>

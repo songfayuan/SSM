@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songfayuan.ssm.dao.LogDao">
+	
+	<!-- 保存日志记录 -->
+	<insert id="save" parameterType="com.songfayuan.ssm.entity.Log">
+		insert into log(
+			time,
+			logtype,
+			content,
+			userid
+		)
+		values
+			(#{time}, #{logtype}, #{content}, #{userid})
+	</insert>
+	
+	<!-- 查询从offset+1开始，取pagesize条数据 -->
+	<select id="getList" resultType="com.songfayuan.ssm.entity.Log" >
+		select
+			*
+		from
+			log u
+		<where>
+			<if test="model.logtype != null">
+				<if test="model.logtype != 0">and u.logtype = #{model.logtype}</if>
+			</if>
+			<if test="model.content != null">and u.content like concat('%', #{model.content}, '%')</if>
+			<if test="model.userid != null"> and u.userid = #{model.userid}</if>
+			<if test="model.starttime1 != null">
+				<if test="model.starttime1 != 0">and u.time &gt;= #{model.starttime1}</if>
+			</if>
+			<if test="model.endtime1 != null">
+				<if test="model.endtime1 != 0">and u.time &lt;= #{model.endtime1}</if>
+			</if>	
+		</where>
+		order by
+			u.id desc
+		<if test="offset != null and pagesize != null">limit #{offset}, #{pagesize}</if>
+	</select>
+	
+	<!-- 查询数据有多少条-->
+	<select id="findRows" resultType="Integer" >
+		select
+			count(u.id)
+		from
+			log u
+		<where>
+			<if test="model.logtype != null">
+				<if test="model.logtype != 0">and u.logtype = #{model.logtype}</if>
+			</if>
+			<if test="model.content != null">and u.content like concat('%', #{model.content}, '%')</if>
+			<if test="model.userid != null"> and u.userid = #{model.userid}</if>
+			<if test="model.starttime1 != null">
+				<if test="model.starttime1 != 0">and u.time &gt;= #{model.starttime1}</if>
+			</if>
+			<if test="model.endtime1 != null">
+				<if test="model.endtime1 != 0">and u.time &lt;= #{model.endtime1}</if>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询一条数据-->
+	<select id="getOne" resultType="com.songfayuan.ssm.entity.Log" >
+		select
+			*
+		from
+			log u
+		where
+			u.id = #{id}
+	</select>
+	
+</mapper>
